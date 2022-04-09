@@ -102,18 +102,19 @@ class DashboardController extends Controller
             $proDuct->status = $request->status;
             $proDuct->save();
 
-            $images= $request->moreImage;
-            $i=0;
-            foreach($images as $image)
-            {
-                $i++;
-                $photo= new ProductImage();
-                $photo->product_id = $proDuct->id;
-                $file = $image;
-                $filename = \Str::random(4).$file->getClientOriginalName();
-                $file->move(public_path('uploads/product/'), $filename);
-                $photo->image = 'uploads/product/'.$filename;
-                $photo->save();
+            if ($request->hasFile('moreImage')) {
+                $images = $request->moreImage;
+                $i = 0;
+                foreach ($images as $image) {
+                    $i++;
+                    $photo = new ProductImage();
+                    $photo->product_id = $proDuct->id;
+                    $file = $image;
+                    $filename = \Str::random(4) . $file->getClientOriginalName();
+                    $file->move(public_path('uploads/product/'), $filename);
+                    $photo->image = 'uploads/product/' . $filename;
+                    $photo->save();
+                }
             }
 
             return back()->with('success','Product Updated Successfully');
